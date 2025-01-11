@@ -12,7 +12,11 @@ builder.Services.AddSwaggerGen();
 builder.Services.AddControllers();
 builder.Services.AddDbContext<ApplicationDbContext>(options =>
 {
-    options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection"));
+    // options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection"));
+    options.UseMySql(
+        builder.Configuration.GetConnectionString("MySQL"),
+        new MySqlServerVersion(new Version(8, 0, 33)));
+
 });
 
 builder.Services.AddScoped<IStockRepository, StockRepository>();

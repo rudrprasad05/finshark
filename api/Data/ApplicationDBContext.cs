@@ -13,6 +13,10 @@ namespace api.Data
         {
             
         }
+        protected override void OnModelCreating(ModelBuilder modelBuilder)
+    {
+        modelBuilder.UseCollation("utf8mb4_general_ci");
+    }
 
         public DbSet<Stock> Stocks {get; set;}
         public DbSet<Comment> Comments {get; set;}  

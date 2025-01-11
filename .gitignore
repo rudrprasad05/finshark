@@ -1,0 +1,21 @@
+# Build results
+[Dd]ebug/
+[Dd]ebugPublic/
+[Dd]ist/
+[Dd]evelopment/
+[D]ebug/
+[D]ebugPublic/
+[D]ist/
+[D]evelopment/
+
+# .NET Core
+/bin/
+**/obj/**
+
+# User-specific files
+.vs/
+.vscode/
+.idea/
+.vs2019/
+.vs2017/
+.DS_Store
