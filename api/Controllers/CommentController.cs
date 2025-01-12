@@ -26,6 +26,9 @@ namespace api.Controllers
         [HttpGet]
         public async Task<IActionResult> Get()
         {
+            if(!ModelState.IsValid){
+                return BadRequest(ModelState);
+            }
             var commentsDTO = await _commentRepository.GetAllCommentsAsync();
             var comments = commentsDTO.Select(x => x.ToCommentDTO());
             return Ok(comments);
