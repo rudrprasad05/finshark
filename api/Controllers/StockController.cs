@@ -54,7 +54,11 @@ namespace api.Controllers
         [HttpDelete("{id}")]
         public async Task<IActionResult> Delete([FromRoute] int id)
         {
-            await _stockRepository.DeleteAsync(id);
+            var model = await _stockRepository.DeleteAsync(id);
+            if(model == null)
+            {
+                return NotFound();
+            }
             return Ok();
         }
 
@@ -62,7 +66,7 @@ namespace api.Controllers
         public async Task<IActionResult> Put([FromRoute] int id, [FromBody] UpdateStockDTO updateStockDTO)
         {
             var stockModel = await _stockRepository.UpdateAsync(id, updateStockDTO);
-            
+
             if (stockModel == null){
                 return NotFound();
             }
