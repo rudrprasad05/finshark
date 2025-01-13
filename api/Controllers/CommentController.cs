@@ -11,7 +11,7 @@ namespace api.Controllers
 {
     [Route("/api/comment")]
     [ApiController]
-    public class CommentController: ControllerBase
+    public class CommentController: BaseController
     {
         private readonly ICommentRepository _commentRepository;
         private readonly IStockRepository _stockRepository;

@@ -52,7 +52,18 @@ namespace api.Repository
                 stocks = stocks.Where(s => s.Symbol.Contains(queryObject.Symbol));
             }
 
-            return await stocks.ToListAsync();
+            if(!string.IsNullOrWhiteSpace(queryObject.SortBy))
+            {
+                if(queryObject.SortBy.Equals("Symbol", StringComparison.OrdinalIgnoreCase))
+                {
+                    stocks = queryObject.IsDescending ? stocks.OrderByDescending(s => s.Symbol) : stocks.OrderBy(s => s.Symbol);
+                }
+            }
+
+            var pageSize = queryObject.PageSize;
+            var skipNumber = (queryObject.PageNumber - 1) * pageSize;
+
+            return await stocks.Skip(skipNumber).Take(pageSize).ToListAsync();
         }
 
         public async Task<Stock?> GetByIdAsync(int id)

@@ -4,6 +4,7 @@ using api.Repository;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.AspNetCore.Mvc;
+using api.middleware;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -21,7 +22,8 @@ builder.Services.AddDbContext<ApplicationDbContext>(options =>
     // options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection"));
     options.UseMySql(
         builder.Configuration.GetConnectionString("MySQL"),
-        new MySqlServerVersion(new Version(8, 0, 33)));
+        new MySqlServerVersion(new Version(8, 0, 33))
+    );
 
 });
 
@@ -30,6 +32,9 @@ builder.Services.AddScoped<ICommentRepository, CommentRepository>();
 
 
 var app = builder.Build();
+
+// middleware
+app.UseMiddleware<Log>();
 
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
@@ -40,9 +45,20 @@ if (app.Environment.IsDevelopment())
 
 app.UseHttpsRedirection();
 app.MapControllers();
-app.Run();
 
-record WeatherForecast(DateOnly Date, int TemperatureC, string? Summary)
+using (var scope = app.Services.CreateScope())
 {
-    public int TemperatureF => 32 + (int)(TemperatureC / 0.5556);
+    var dbContext = scope.ServiceProvider.GetRequiredService<ApplicationDbContext>();
+    try
+    {
+        dbContext.Database.OpenConnection(); // Test the connection
+        dbContext.Database.CloseConnection();
+        Console.WriteLine("Database connection successful.");
+    }
+    catch (Exception ex)
+    {
+        Console.WriteLine($"Database connection failed: {ex.Message}");
+    }
 }
+
+app.Run();
