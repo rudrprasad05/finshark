@@ -12,6 +12,7 @@
 /bin/
 **/logs/
 **/obj/**
+appsettings.Development.json
 
 # User-specific files
 .vs/
