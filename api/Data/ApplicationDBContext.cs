@@ -29,10 +29,21 @@ namespace api.Data
     
             modelBuilder.UseCollation("utf8mb4_general_ci");
             modelBuilder.Entity<IdentityRole>().HasData(roles); 
+
+            modelBuilder.Entity<Portfolio>().HasKey(portfolio => new {portfolio.AppUserId, portfolio.StockId});
+            modelBuilder.Entity<Portfolio>()
+                .HasOne(portfolio => portfolio.AppUser)
+                .WithMany(appUser => appUser.Portfolios)
+                .HasForeignKey(portfolio => portfolio.AppUserId);
+            modelBuilder.Entity<Portfolio>()
+                .HasOne(portfolio => portfolio.Stock)
+                .WithMany(stock => stock.Portfolios)
+                .HasForeignKey(portfolio => portfolio.StockId);
         }
 
         public DbSet<Stock> Stocks {get; set;}
         public DbSet<Comment> Comments {get; set;}  
+        public DbSet<Portfolio> Portfolios {get; set ;}
         
     }
 }

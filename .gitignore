@@ -9,7 +9,7 @@
 [D]evelopment/
 
 # .NET Core
-/bin/
+**/bin/**
 **/logs/
 **/obj/**
 appsettings.Development.json

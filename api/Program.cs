@@ -15,20 +15,18 @@ using Microsoft.OpenApi.Models;
 var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddEndpointsApiExplorer();
+builder.WebHost.UseUrls("http://0.0.0.0:8081");
 builder.Services.AddControllers()
     .AddNewtonsoftJson(options =>
     {
         options.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore;
     });
 builder.Services.AddDbContext<ApplicationDbContext>(options =>
-{
-    // options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection"));
     options.UseMySql(
-        builder.Configuration.GetConnectionString("MySQL"),
-        new MySqlServerVersion(new Version(8, 0, 33))
-    );
-
-});
+        builder.Configuration.GetConnectionString("DefaultConnection"),
+        ServerVersion.AutoDetect(builder.Configuration.GetConnectionString("DefaultConnection"))
+    )
+);
 builder.Services.AddIdentity<AppUser, IdentityRole>(
     options => 
     {
@@ -93,7 +91,7 @@ builder.Services.AddSwaggerGen(option =>
 builder.Services.AddScoped<IStockRepository, StockRepository>();
 builder.Services.AddScoped<ICommentRepository, CommentRepository>();
 builder.Services.AddScoped<ITokenService, TokenService>();
-
+builder.Services.AddScoped<IPortfolioRepository, PortfolioRepository>();
 
 var app = builder.Build();
 
